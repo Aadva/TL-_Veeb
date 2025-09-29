@@ -1,0 +1,29 @@
+{
+  "name": "ta_veeb_aadva",
+  "version": "1.0.0",
+  "description": "Mirko veebiprogrammeerimise kursuse veeb",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://aadva@github.com/Aadva/TL-_Veeb.git"
+  },
+  "keywords": [
+    "Õppetöö",
+    "node.js",
+    "express.js",
+    "Tallinna",
+    "Ülikool"
+  ],
+  "author": "Mirko Aadva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Aadva/TL-_Veeb/issues"
+  },
+  "homepage": "https://github.com/Aadva/TL-_Veeb#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
