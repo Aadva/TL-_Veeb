@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="utf-8">
+  <title>Mirko, veebiprogrammeerimine</title>
+</head>
+<body>
+  <img src="images/vp_banner_2025_TA.jpg" alt="kursuse bänner">
+
+  <h1>Mirko, veebiprogrammeerimine</h1>
+  <p>Teises tunnis õppisime javascripti kohta.</p>
+
+  <p>
+    See leht on loodud veebiprogrammeerimise kursusel 
+    <a href="https://www.tlu.ee">Tallinna Ülikoolis</a> 
+    ning ei sisalda tõsiseltvõetavat sisu! Alt leiab ka pildi minu ühest vingest kassist, 
+    mis on tehtud kasutades AI-d.
+  </p>
+
+  <img src="images/kass.jpg" alt="kassi pilt">
+
+  <hr>
+  <ul>
+	<li><a href="/">Avaleht</a></li>
+	</ul>
+	<hr>
+	<h2><%= heading %></h2>
+	<ul>
+		<!-- % märkidega on ejs kood muutujate näitamiseks -->
+		<% listData.forEach(function(listItem){ %>
+			<li><%= listItem %></li>
+		<% }); %>
+	</ul>	
+</body>
+</html>
+
