@@ -21,16 +21,17 @@
 
   <hr>
   <ul>
-	<li><a href="/">Avaleht</a></li>
-	</ul>
-	<hr>
-	<h2><%= heading %></h2>
-	<ul>
-		<!-- % märkidega on ejs kood muutujate näitamiseks -->
-		<% listData.forEach(function(listItem){ %>
-			<li><%= listItem %></li>
-		<% }); %>
-	</ul>	
+    <li><a href="/">Avaleht</a></li>
+    <li><a href="/regvisit">Registreeri uus külastus</a></li>
+  </ul>
+  <hr>
+
+  <h2><%= heading %></h2>
+
+  <ul>
+    <% listData.forEach(function(listItem){ %>
+      <li><%= listItem %></li>
+    <% }); %>
+  </ul>
 </body>
 </html>
-
