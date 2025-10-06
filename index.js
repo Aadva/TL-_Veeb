@@ -1,65 +1,125 @@
 const express = require("express");
 const fs = require("fs");
-const app = express();
 const bodyparser = require("body-parser");
+const mysql =require("mysql2");
 const dateEt = require("./src/dateTimeET");
+const dbInfo = require("../../vp2025config");
 const textRef = "public/txt/vanasonad.txt";
-
+const app = express();
 app.set("view engine", "ejs");
-
 app.use(express.static("public"));
-app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.urlencoded({extended: false}));
 
-app.get("/", (req, res) => {
+const conn = mysql.createConnection({
+	host: dbInfo.configData.host,
+	user: dbInfo.configData.user,
+	password: dbInfo.configData.passWord,
+	database: "if25_maadva"
+});
+
+app.get("/", (req, res)=>{
+;
 	res.render("index");
 });
 
-app.get("/timenow", (req, res) => {
+app.get("/timenow", (req, res)=>{
 	const weekDayNow = dateEt.weekDay();
 	const dateNow = dateEt.fullDate();
-	res.render("timenow", { weekDayNow: weekDayNow, dateNow: dateNow });
+	res.render("timenow", {weekDayNow: weekDayNow, dateNow: dateNow});
 });
 
-app.get("/vanasonad", (req, res) => {
-	fs.readFile(textRef, "utf8", (err, data) => {
-		if (err) {
-			res.render("genericlist", {
-				heading: "Valik Eesti vanas�nu",
-				listData: ["Ei leidnud �htegi vanas�na!"],
-			});
-		} else {
-			const folkWisdom = data.split(";");
-			res.render("genericlist", {
-				heading: "Valik Eesti vanas�nu",
-				listData: folkWisdom,
+app.get("/vanasonad", (req, res)=>{
+	let folkWisdom = [];
+	fs.readFile(textRef, "utf8", (err, data)=>{
+		if(err){
+			res.render("genericlist", {heading: "Valik Eesti vanasÃµnu", listData: ["Ei leidnud Ã¼htegi vanasÃµna!"]});
+		}
+		else {
+			folkWisdom = data.split(";");
+			res.render("genericlist", {heading: "Valik Eesti vanasÃµnu", listData: folkWisdom});
+		}
+	});
+});
+
+app.get("/regvisit", (req, res)=>{
+	res.render("regvisit");
+});
+
+app.post("/regvisit", (req, res)=>{
+	console.log(req.body);
+	fs.open("public/txt/visitlog.txt", "a", (err, file)=>{
+		if(err){
+			throw(err);
+		}
+		else {
+			fs.appendFile("public/txt/visitlog.txt", req.body.firstNameInput + " " + req.body.lastNameInput + ", " + dateEt.fullDate() + " kell " + dateEt.fullTime() + ";", (err)=>{
+				if(err){
+					throw(err);
+				}
+				else {
+					console.log("Salvestatud!");
+					res.render("visitregistered", {visitor: req.body.firstNameInput + " " + req.body.lastNameInput});
+				}
 			});
 		}
 	});
 });
 
-app.get("/regvisit", (req, res) => {
-	res.render("regvisit");
-});
-
-app.post("/regvisit", (req, res) => {
-	const firstName = req.body.firstNameInput;
-	const lastName = req.body.lastNameInput;
-	const fullName = firstName + " " + lastName + "\n";
-
-	fs.appendFile("public/txt/visitlog.txt", fullName, (err) => {
-		if (err) throw err;
-
-		console.log("Salvestatud!");
-		res.render("visitregistered", { fullName: fullName.trim() });
+app.get("/visitlog", (req, res)=>{
+	let listData = [];
+	fs.readFile("public/txt/visitlog.txt", "utf8", (err, data)=>{
+		if(err){
+			res.render("genericlist", {heading: "Registreeritud külastused", listData: ["Ei leidnud ühtegi külastust!"]});
+		}
+		else {
+			listData = data.split(";");
+			let correctListData = [];
+			for(let i = 0; i < listData.length - 1; i ++){
+				correctListData.push(listData[i]);
+			}
+			res.render("genericlist", {heading: "registreeritud külastused", listData: correctListData});
+		}
 	});
 });
-app.get("/visitlog", (req, res) => {
-  fs.readFile("public/txt/visitlog.txt", "utf8", (err, data) => {
-    const rows = err ? [] : data.split("\n").filter(Boolean);
-    res.render("genericlist", { heading: "Külastuste logi", listData: rows });
-  });
+
+app.get("/Eestifilm", (req, res)=>{
+	res.render("eestifilm");
 });
 
-app.listen(5132, () => {
-	console.log("Server t��tab pordil 5132");
+app.get("/Eestifilm/inimesed", (req, res)=>{
+	const sqlReq = "SELECT * FROM person";
+	conn.execute(sqlReq, (err, sqlres)=>{
+		if(err){
+			throw(err);
+		}
+		else {
+			console.log(sqlres);
+			res.render("filmiinimesed", {personList: sqlres});
+		}
+	});
 });
+
+app.get("/Eestifilm/filmiinimesed_add", (req, res)=>{
+	res.render("filmiinimesed_add", {notice: "Ootan sisestust"});
+});
+
+app.post("/Eestifilm/filmiinimesed_add", (req, res)=>{
+	console.log(req.body);
+	if(!req.body.firstNameInput || !req.body.lastNameInput || !req.body.bornInput || req.body.bornInput >= new Date()){
+	  res.render("filmiinimesed_add", {notice: "Osa andmeid oli puudu või ebakorrektsed"});
+	}
+	else {
+		let sqlReq = "INSERT INTO person (first_name, last_name, born, deceased) VALUES (?,?,?,?)";
+		conn.execute(sqlReq, [req.body.firstNameInput, req.body.lastNameInput, req.body.bornInput, req.body.deceasedInput], (err, sqlres)=>{
+			if(err){
+				res.render("filmiinimesed_add", {notice: "Andmete salvestamine ebaõnnestus"});
+			}
+			else {
+				res.render("filmiinimesed_add", {notice: "Andmed salvestatud"});
+			}
+		});
+		
+	}
+});
+
+app.listen(5132);
