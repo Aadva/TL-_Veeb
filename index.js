@@ -121,5 +121,9 @@ app.post("/Eestifilm/filmiinimesed_add", (req, res)=>{
 		
 	}
 });
+const eestifilmRouter = require("./routes/eestifilmRoutes");
+app.use("/Eestifilm", eestifilmRouter);
 
+const photoupRouter = require ("./routes/photoupRoutes");
+app.use("/galleryphotoupload", photoupRouter);
 app.listen(5132);
