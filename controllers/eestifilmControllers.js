@@ -27,7 +27,7 @@ const inimesed = async (req, res)=>{
 	const sqlReq = "SELECT * FROM person";
 	try {
 		conn = await mysql.createConnection(dbConfInga);
-		console.log("Andmebaasiأ¼hendus loodud!");
+		console.log("Andmebaasiühendus loodud!");
 		const [rows, fields] = await conn.execute(sqlReq);
 		res.render("filmiinimesed", {personList: rows});
 	}
@@ -38,7 +38,7 @@ const inimesed = async (req, res)=>{
 	finally {
 		if(conn){
 			await conn.end();
-			console.log("Andmebaasiأ¼hendus on suletud!");
+			console.log("Andmebaasiühendus on suletud!");
 		}
 	}
 };
@@ -62,13 +62,13 @@ const inimesedAddPost = async (req, res)=>{
 	let sqlReq = "INSERT INTO person (first_name, last_name, born, deceased) VALUES (?,?,?,?)";
 	
 	if(!req.body.firstNameInput || !req.body.lastNameInput || !req.body.bornInput || req.body.bornInput >= new Date()){
-	  res.render("filmiinimesed_add", {notice: "Osa andmeid oli puudu vأµi ebakorrektsed"});
+	  res.render("filmiinimesed_add", {notice: "Osa andmeid oli puudu või ebakorrektsed"});
 	}
 	
 	else {
 		try {
 			conn = await mysql.createConnection(dbConfInga);
-			console.log("Andmebaasiأ¼hendus loodud!");
+			console.log("Andmebaasiühendus loodud!");
 			let deceasedDate = null;
 			if(req.body.deceasedInput != ""){
 				deceasedDate = req.body.deceasedInput;
@@ -79,12 +79,12 @@ const inimesedAddPost = async (req, res)=>{
 		}
 		catch(err) {
 			console.log("Viga: " + err);
-			res.render("filmiinimesed_add", {notice: "Andmete salvestamine ebaأµnnestus"});
+			res.render("filmiinimesed_add", {notice: "Andmete salvestamine ebaõnnestus"});
 		}
 		finally {
 			if(conn){
 			await conn.end();
-				console.log("Andmebaasiأ¼hendus on suletud!");
+				console.log("Andmebaasiühendus on suletud!");
 			}
 		}
 	}

@@ -6,6 +6,8 @@ const dateEt = require("./src/dateTimeET");
 const dbInfo = require("../../vp2025config");
 const textRef = "public/txt/vanasonad.txt";
 const app = express();
+const photogallery = require("./routes/galleryRoutes");
+
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyparser.urlencoded({extended: false}));
@@ -126,4 +128,8 @@ app.use("/Eestifilm", eestifilmRouter);
 
 const photoupRouter = require ("./routes/photoupRoutes");
 app.use("/galleryphotoupload", photoupRouter);
+
+const galleryRouter = require ("./routes/galleryRoutes");
+app.use("/photogallery", photogallery);
+
 app.listen(5132);
