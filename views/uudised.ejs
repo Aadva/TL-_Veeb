@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="utf-8">
+  <title>Uudise lisamine</title>
+</head>
+<body>
+  <img src="images/vp_banner_2025_TA.jpg" alt="kursuse bänner">
+
+  <h1>Lisa uus uudis</h1>
+
+  <p>
+    See leht on loodud veebiprogrammeerimise kursusel 
+    <a href="https://www.tlu.ee">Tallinna Ülikoolis</a> 
+    ning ei sisalda tõsiseltvõetavat sisu!
+  </p>
+
+  <hr>
+  <ul>
+    <li><a href="/">Avaleht</a></li>
+    <li><a href="/uudised">Kõik uudised</a></li>
+  </ul>
+  <hr>
+
+  <form action="/uudised/lisa" method="POST">
+    <label for="title">Uudise pealkiri:</label><br>
+    <input type="text" id="title" name="title" required><br><br>
+
+    <label for="content">Uudise sisu:</label><br>
+    <textarea id="content" name="content" rows="6" cols="60" required></textarea><br><br>
+
+    <label for="expire">Aegumiskuupäev:</label><br>
+    <input type="date" id="expire" name="expire" required><br><br>
+
+    <button type="submit">Salvesta uudis</button>
+  </form>
+
+  <% if (typeof error !== "undefined") { %>
+    <p style="color:red;"><%= error %></p>
+  <% } %>
+
+</body>
+</html>

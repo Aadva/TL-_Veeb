@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="utf-8">
+  <title>Uudised</title>
+</head>
+<body>
+  <img src="images/vp_banner_2025_TA.jpg" alt="kursuse bänner">
+
+  <h1>Uudised</h1>
+
+  <ul>
+    <li><a href="/">Avaleht</a></li>
+    <li><a href="/uudised/lisa">Lisa uus uudis</a></li>
+  </ul>
+  <hr>
+
+  <% if(uudised.length === 0) { %>
+    <p>Hetkel pole ühtegi mitte-aegunud uudist.</p>
+  <% } %>
+
+  <% uudised.forEach(uudis => { %>
+    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+      <h2><%= uudis.title %></h2>
+      <p><%= uudis.content %></p>
+      <small>Aegub: <%= new Date(uudis.expire).toISOString().slice(0,10) %></small>
+    </div>
+  <% }) %>
+
+</body>
+</html>
